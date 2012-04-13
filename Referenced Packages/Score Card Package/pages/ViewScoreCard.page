@@ -1,0 +1,106 @@
+<apex:page standardcontroller="SCard__ScrdMaster__c" id="ViewScoreCard" sidebar="false" tabStyle="SCard__ScrdMaster__c" action="{!PageActionDel}" extensions="SCard.NewScorecardController" standardStylesheets="false">
+<apex:form id="idForm">
+	<apex:pageMessages id="pgMsg" />
+	
+	<apex:actionStatus id="status"/>
+	<apex:outPutPanel id="idOpPanelNew">
+		<apex:pageBlock title="{!$Label.scard__Score_Card_Label}" id="idPageBlock" mode="edit">
+			<apex:pageBlockButtons id="idpgbButtons">
+				<apex:commandButton immediate="true" value="{!$Label.scard__Button_cancel}" action="{!cancel}" id="idCancelButton"/>
+			</apex:pageBlockButtons>
+			
+			<apex:pageBlockSection title="{!$Label.scard__ScoreCard_GeneralInformation}" columns="2" id="pgbSecGeneral">
+				
+				<apex:pageBlockSectionItem dataStyle="width:20px;" id="pgbSecItem_1">
+					<apex:outputLabel value="Score Card name" for="idIpName" id="idOpLabelName"/>
+					<apex:outputField value="{!objScoreCardMaster.Name}"  id="idIpName" /><!-- required="true" --> 
+				</apex:pageBlockSectionItem>
+					
+				<apex:pageBlockSectionItem dataStyle="width:20px;" id="pgbSecItem_2" >
+					<apex:outputLabel value="Opportunity" for="idopFieldOpp" id="idOpLabelOpp"/>
+					<apex:outputField value="{!objScoreCardMaster.SCard__Opportunity__c}" id="idopFieldOpp"  />
+				</apex:pageBlockSectionItem>
+				
+				<apex:pageBlockSectionItem dataStyle="width:20px;" id="pgbSecItem_21">
+					<apex:outputLabel value="Template" for="idopFieldOpp" id="idOpLabelTemp1"/>
+					<apex:outputLabel value="{!objScoreCardMaster.TemplateMaster__r.Name}" id="idopFieldOppLabel" />  
+				</apex:pageBlockSectionItem>
+							
+				<apex:pageBlockSectionItem dataStyle="width:20px;" id="pgbSecItem_22" >
+					<apex:outputLabel value="Status" for="idopFieldOpp" id="idScStatus"/>
+					<apex:outputLabel value="{!objScoreCardMaster.SCard__Status__c}" id="idStatus" />  
+				</apex:pageBlockSectionItem>
+				
+			</apex:pageBlockSection>
+			<!-- Page Block for Score Card Table -->
+			<apex:pageBlockSection title="{!$Label.scard__ScoreCard_Scoring}" id="topblock" rendered="{!ShowPageBlockTable}" columns="1">
+					 <apex:pageBlockTable value="{!lstChildTemplateDetails}" id="pgbTable_1" var="varTemDetails">
+					 	<apex:column id="idColPoints" headerValue="{!$Label.scard__ScoreCard_TH_Points}">
+							<apex:OutputField value="{!varTemDetails.objTemplateDetails.SCard__Get_Points__c}" id="idPoints" />
+						</apex:column>
+						
+						 <apex:column id="idColDesc" headerValue="{!$Label.scard__ScoreCard_TH_DesGive}">
+								<apex:OutputField value="{!varTemDetails.objTemplateDetails.SCard__Give_Description__c}" id="idGiveDesc" />
+						</apex:column>
+						<apex:column id="idColGave" headerValue="{!$Label.scard__ScoreCard_TH_Gave}">
+							<apex:inputCheckbox value="{!varTemDetails.bGave}" id="idGave" disabled="true"  />
+						</apex:column>
+						
+						<apex:column id="idColFreq" headerValue="{!$Label.scard__ScoreCard_Th_NumofTimes}">
+							<apex:inputText value="{!varTemDetails.intNumTime}"  id="idFreq" disabled="true"  style="width:30px;"/>
+						</apex:column>
+						
+						<apex:column id="idColTotal" headerValue="{!$Label.scard__ScoreCard_TH_Total}">
+							<apex:outputText value="{!varTemDetails.intGiveTotal}" id="idTotal" style="width:30px;"/>
+						</apex:column>
+						
+						<apex:column id="blank" headerValue="">
+							<div style="width:60px;">&nbsp;</div>
+						</apex:column>
+						
+						<apex:column id="idColGetPts" headerValue="{!$Label.scard__ScoreCard_TH_Points}">
+							<apex:OutputField value="{!varTemDetails.objTemplateDetails.SCard__Get_Points__c}" id="idGetPoint" />
+						</apex:column>
+						
+						<apex:column id="idColGetDesc" headerValue="{!$Label.scard__ScoreCard_TH_DesGet}">
+							<apex:OutputField value="{!varTemDetails.objTemplateDetails.SCard__Get_Description__c}" id="idGetDesc" />
+						</apex:column>
+						
+						<apex:column id="idColAskNot" headerValue="{!$Label.scard__ScoreCard_TH_Awaited}">
+							<apex:inputCheckbox value="{!varTemDetails.bAskNotGot}"  id="idAskNotGave" disabled="true" />
+						</apex:column>
+						
+						<apex:column id="idColDenied" headerValue="{!$Label.scard__ScoreCard_TH_Denied}">
+							<apex:inputCheckbox value="{!varTemDetails.bAskedDenied}"  id="idDenied" disabled="true" />
+						</apex:column>
+						
+						<apex:column id="idColGot" headerValue="{!$Label.scard__ScoreCare_TH_Got}">
+							<apex:inputCheckbox value="{!varTemDetails.bGot}" id="idGot" disabled="true" />
+						</apex:column>
+						<apex:column id="idColGotTotal" headerValue="{!$Label.scard__ScoreCard_TH_Total}">
+							<apex:outputText value="{!varTemDetails.intGotTotal}" id="idGotTotal"  style="width:30px;"/>
+						</apex:column>
+				</apex:pageBlockTable>
+		</apex:pageBlockSection>
+				<apex:pageBlockSection title="Total Score" columns="3" rendered="{!ShowPageBlockTable}">
+					<apex:pageBlockSectionItem dataStyle="width:20px;" id="pgbSecItem_TotalScoreGives">
+						<apex:outputLabel value="{!$Label.scard__ScoreCard_TH_TotalGives}" id="lblTotalScoreGives"/>
+						<apex:outputText value="{0,number,#.##}" styleClass="totalScoreGet">
+						    	<apex:param value="{!objScoreCardMaster.SCard__Total_Give_Score__c}"  />
+							</apex:outputText>
+					</apex:pageBlockSectionItem>
+					
+					<apex:pageBlockSectionItem dataStyle="width:20px;" id="pgbSecItem_TotalScoreGets">
+						<apex:outputLabel value="{!$Label.scard__ScoreCardd_TH_TotalGet}" id="lblTotalScoreGets"/> 
+							<apex:outputText value="{0,number,#.##}" styleClass="totalScoreGet">
+						    	<apex:param value="{!objScoreCardMaster.SCard__Total_Get_Score__c}"  />
+							</apex:outputText>
+					</apex:pageBlockSectionItem>
+				</apex:pageBlockSection>
+			</apex:pageBlock>
+		
+	</apex:outPutPanel>
+	
+</apex:form>
+<apex:relatedList list="ProcessSteps" ></apex:relatedList>
+</apex:page>

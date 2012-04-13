@@ -1,0 +1,41 @@
+<apex:page standardController="SCard__TemplateMaster__c"  extensions="SCard.EditTemplateController" sidebar="false" tabStyle="SCard__TemplateMaster__c" id="EditTemplatePage" >
+	<apex:form id="idForm">
+	<apex:pageMessages id="idPgMessages"/>
+	<apex:pageBlock id="idpgBlock2" Title="Template">
+			<apex:pageBlockSection title="View Template" id="idpbSection2">
+				<apex:pageBlockSectionItem id="idpbSectionItem_3">						
+								<apex:outputLabel value="Template Name" for="idOutputName"/>
+								<apex:OutputField value="{!objTemplate.Name}" id="idOutputName"/>
+				</apex:pageBlockSectionItem>
+				<apex:pageBlockSectionItem id="idpbSectionItem_4">
+						<apex:outputLabel value="Status" for="idOutputStatus"/>
+						<apex:OutputField value="{!objTemplate.SCard__TStatus__c}" id="idOutputStatus"/>
+				</apex:pageBlockSectionItem>
+				</apex:pageBlockSection>
+			</apex:pageBlock>
+			<apex:pageBlock id="idpgBlockDetails2" Title="Template Details">
+				<apex:pageBlockButtons id="idpgbuttons">
+					<apex:commandButton action="{!AddMore}" title="Add More Template" value="Add More" rerender="idPgMessages,idPgbTable,idpgBlock2" status="counterStatus" immediate="true" id="cbAddmoreClm" />
+					<apex:commandButton action="{!Remove}" title="Remove Template" value="Remove" status="counterStatus" id="cbRemoveClm"  />
+					<apex:commandButton action="{!Save}" title="Save Template" Value="Save" immediate="false" id="cbSave" />
+					<apex:commandButton action="{!Cancel}" value="{!$Label.scard__Button_cancel}" immediate="true" status="counterStatus"  id="cbCancel2"/>
+				</apex:pageBlockButtons>
+				<apex:pageBlockSection title="View Template Details" id="idpbSection_2">
+					<apex:pageBlockTable value="{!lstTemplateItems}" var="item"  id="idPgbTable">
+						<apex:column id="idColflag">
+						<apex:inputCheckbox value="{!item.flag}" id="idCheckflag"/>
+						</apex:column>
+						<apex:column headerValue="Points" id="idCol2" >
+						<apex:inputField value="{!item.detailsItems.SCard__Get_Points__c}"  />
+						</apex:column>
+						<apex:column headerValue="Customer expectations (Give)" id="idCol3"> 
+						<apex:inputField value="{!item.detailsItems.SCard__Give_Description__c}"/>
+						</apex:column>
+						<apex:column headerValue="Vendor expectations (Get)" id="idCol4">
+						<apex:inputField value="{!item.detailsItems.SCard__Get_Description__c}" />
+						</apex:column>
+					</apex:pageBlockTable>
+				</apex:pageBlockSection>		
+			</apex:pageBlock>
+	</apex:form>
+</apex:page>
